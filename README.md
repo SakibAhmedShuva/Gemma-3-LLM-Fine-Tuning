@@ -77,17 +77,21 @@ The fine-tuned model can:
 ## Example Responses
 
 ```
-User: Tell me about the BOSCH 750W 125MM ANGLE GRINDER 0601394042.
-Model: Righto, the BOSCH 750W 125MM ANGLE GRINDER is a corded angle grinder from BOSCH. 
-Looks like it goes for about $149.00 at Total Tools. It's rated at 750W.
+User: Can you help me find information about flight BA492 today?
+Model: I can see that British Airways flight BA492 is scheduled to depart from London Heathrow (LHR) to Gibraltar (GIB) at 10:40 AM today. The flight is currently showing as "On Time" with an estimated arrival time of 2:25 PM local time. Gate information should be available approximately 90 minutes before departure. Would you like me to check any other details about this flight?
 ```
 
 ```
-User: What's your advice for a beginner DIYer like me?
-Model: Welcome to DIY! Start with small projects to build confidence. Invest in basic 
-quality tools - a good drill, hammer, screwdriver set, and measuring tape. Don't be 
-afraid to make mistakes - they're your best teachers. Always prioritize safety with 
-proper eye protection and work gloves.
+User: I need to change my reservation. What's the best way to do that?
+Model: For changing your reservation, you have a few options:
+
+1. Use the airline's mobile app or website - this is usually the quickest method and often avoids service fees.
+
+2. Call the airline's customer service directly. For faster service, have your booking reference number ready.
+
+3. If you booked through a travel agency, contact them directly as they'll need to process any changes.
+
+Keep in mind that depending on your fare type, there might be change fees or fare differences. Would you like me to explain more about potential fees?
 ```
 
 ## License
