@@ -60,9 +60,9 @@ pip install -r requirements.txt
 3. Prepare your data in the expected format:
 ```
 /content/data/
-├── matey_skill_level_mapping.json
-├── matey_behavior_rules.json
-└── TotalTools.json
+├── skill_mapping.json
+├── behavior_rules.json
+└── specs.json
 ```
 
 4. Run the notebook to execute the full pipeline
