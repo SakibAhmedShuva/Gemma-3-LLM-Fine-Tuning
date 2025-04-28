@@ -1,4 +1,4 @@
-# Gemma 3 LLM Fine-Tuning
+# Gemma 3 LLM Fine-Tuning PEFT QLoRA SFT
 
 This repository contains code for fine-tuning Google's Gemma 3 4B Instruct model using QLoRA (Quantized Low-Rank Adaptation) to enhance its capabilities for DIY assistance.
 
