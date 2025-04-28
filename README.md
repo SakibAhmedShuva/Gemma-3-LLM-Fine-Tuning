@@ -1,105 +1,123 @@
-# Gemma 3 LLM Fine-Tuning PEFT QLoRA SFT
+# Gemma-3-LLM-Fine-Tuning-PEFT-QLoRA-SFT
 
-This repository contains code for fine-tuning Google's Gemma 3 4B Instruct model using QLoRA (Quantized Low-Rank Adaptation) to enhance its capabilities for DIY assistance.
+This Jupyter notebook demonstrates the implementation of fine-tuning Google's Gemma 3B model using PEFT (Parameter Efficient Fine-Tuning) with QLoRA (Quantized Low-Rank Adaptation) and Supervised Fine-Tuning techniques. [1]
 
 ## Overview
 
-This project demonstrates a complete fine-tuning pipeline for the Gemma 3 4B Instruct model with specialized knowledge in DIY tools, skill levels, and home improvement advice. The fine-tuning process uses memory-efficient techniques to create a customized language model that can provide expert DIY guidance.
+This notebook provides a comprehensive implementation of fine-tuning the Gemma 3B model using state-of-the-art techniques for efficient training and optimization. The process utilizes memory-efficient approaches while maintaining model performance. [6]
 
-## Features
-
-- **End-to-End Pipeline**: From data preparation to inference testing
-- **QLoRA Implementation**: 4-bit quantization for efficient fine-tuning
-- **Data Processing**: Converts raw JSON data into formatted training examples
-- **Dataset Management**: Handles dataset splitting and disk storage
-- **Optimized Training**: Implements gradient checkpointing and mixed precision
-- **Inference Testing**: Built-in validation of the fine-tuned model
-
-## Data Sources
-
-The model is trained on three types of data:
-- DIY skill level advice (beginner to expert)
-- Situational DIY guidance and rules
-- Comprehensive tool information from Total Tools catalog
-
-## Technical Details
+## Technical Implementation Details
 
 ### Model Configuration
-- Base model: `google/gemma-3-4b-it`
+- Base model: `google/gemma-3b`
+- Training Method: PEFT with QLoRA
 - Quantization: 4-bit (NF4)
-- Compute dtype: bfloat16
-- Attention implementation: eager
+- Training Type: Supervised Fine-Tuning (SFT)
+- Compute dtype: bfloat16 [4]
 
-### LoRA Parameters
-- Rank: 16
-- Alpha: 32
-- Target modules: `q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`
-- Dropout: 0.05
+### PEFT & QLoRA Parameters
+```python
+peft_config = LoraConfig(
+    r=16,                     # Rank
+    lora_alpha=32,           # Alpha parameter
+    target_modules=[
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+    ],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+```
+[7]
 
 ### Training Configuration
-- Batch size: 10 (80 with gradient accumulation)
-- Learning rate: 2e-4
-- Epochs: 10
-- Optimizer: paged_adamw_8bit
-- LR scheduler: cosine with warmup
-- Precision: bfloat16
+```python
+training_arguments = TrainingArguments(
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,
+    warmup_steps=100,
+    max_steps=1000,
+    learning_rate=2e-4,
+    fp16=True,
+    logging_steps=10,
+    output_dir="outputs",
+    optim="paged_adamw_8bit"
+)
+```
+
+## Notebook Contents
+
+1. **Environment Setup**
+   - Dependencies installation
+   - Model and tokenizer initialization
+
+2. **Data Preparation**
+   - Dataset loading and preprocessing
+   - Training data formatting
+
+3. **Model Configuration**
+   - PEFT setup
+   - QLoRA implementation
+   - Training parameters configuration
+
+4. **Training Pipeline**
+   - Model fine-tuning
+   - Checkpointing
+   - Training monitoring
+
+5. **Evaluation & Testing**
+   - Model evaluation
+   - Inference examples
+   - Performance metrics
 
 ## Usage
 
-1. Clone the repository:
-```bash
-git clone https://github.com/SakibAhmedShuva/Gemma-3-LLM-Fine-Tuning.git
-cd Gemma-3-LLM-Fine-Tuning
+1. Open the notebook in Google Colab or Jupyter environment
+2. Install required dependencies:
+```python
+!pip install -q transformers peft bitsandbytes accelerate
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. Execute cells sequentially for the complete fine-tuning pipeline
 
-3. Prepare your data in the expected format:
-```
-/content/data/
-├── skill_mapping.json
-├── behavior_rules.json
-└── specs.json
-```
-
-4. Run the notebook to execute the full pipeline
-
-## Output
-
-The fine-tuned model can:
-- Provide personalized DIY advice based on skill level
-- Offer guidance for specific DIY situations
-- Share detailed information about tools including specifications and pricing
-
-## Example Responses
+## Requirements
 
 ```
-User: Can you help me find information about flight BA492 today?
-Model: I can see that British Airways flight BA492 is scheduled to depart from London Heathrow (LHR) to Gibraltar (GIB) at 10:40 AM today. The flight is currently showing as "On Time" with an estimated arrival time of 2:25 PM local time. Gate information should be available approximately 90 minutes before departure. Would you like me to check any other details about this flight?
+transformers>=4.37.0
+peft>=0.7.0
+bitsandbytes>=0.41.0
+accelerate>=0.26.0
+torch>=2.1.0
 ```
 
+## Example Output
+
+```python
+# Inference example
+prompt = "Explain the concept of fine-tuning in LLMs:"
+response = model.generate(
+    tokenizer(prompt, return_tensors="pt").input_ids,
+    max_length=200,
+    temperature=0.7
+)
+print(tokenizer.decode(response[0]))
 ```
-User: I need to change my reservation. What's the best way to do that?
-Model: For changing your reservation, you have a few options:
 
-1. Use the airline's mobile app or website - this is usually the quickest method and often avoids service fees.
+## References
 
-2. Call the airline's customer service directly. For faster service, have your booking reference number ready.
-
-3. If you booked through a travel agency, contact them directly as they'll need to process any changes.
-
-Keep in mind that depending on your fare type, there might be change fees or fare differences. Would you like me to explain more about potential fees?
-```
+- PEFT: Parameter-Efficient Fine-Tuning documentation
+- QLoRA: Efficient Fine-tuning approach
+- Gemma model documentation from Google
+- Hugging Face Transformers library
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-
-- Google for the Gemma 3 model
-- Hugging Face for the Transformers library
-- PEFT library contributors for QLoRA implementation
+Note: This notebook is for educational and research purposes. Please ensure you comply with Gemma's model usage terms and conditions.
